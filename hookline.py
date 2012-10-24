@@ -15,9 +15,11 @@ def fix_headers(soup):
                 h.insert_after(Tag(name='br'))
 
 def fix_sameline(soup, assignments):
-    for child in soup.children:
-        if isinstance(child, NavigableString):
-            for m in assignments:
+    """ Moves the given assignments to their own line when they are
+        found one the same line as another assignment. """
+    for m in assignments:
+        for child in soup.children:
+            if isinstance(child, NavigableString):
                 s = re.search(m+':', child.string, re.IGNORECASE)
                 if s and s.start() > 0:
                     p = child.previous
@@ -29,7 +31,17 @@ def fix_sameline(soup, assignments):
                     p.insert_after(Tag(name='br'))
                     p.insert_after(a.strip())
 
+def fix_extras(soup, extras):
+    """ Removes unwanted assignments. """
+    for child in soup.children:
+        if isinstance(child, NavigableString):
+            for x in extras:
+                if child.string.strip().lower().startswith(x.strip().lower()):
+                    child.extract()
+
 def get_lines(soup):
+    """ Returns the text of each break-separated line in the document,
+        stripping away all HTML tags. """
     lines = ['']
     for child in soup.children:
         if isinstance(child, Tag) and child.name == 'br':
@@ -48,6 +60,7 @@ for item in feed['items']:
         soup = BeautifulSoup(contentPart['value'])
         fix_headers(soup)
         fix_sameline(soup, ['Bass','Churchview','Sound Board'])
+        fix_extras(soup, ['Sound Booth'])
         for line in get_lines(soup):
             if len(line.strip()) > 0:
                 lines.append(line)
