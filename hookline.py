@@ -2,7 +2,7 @@ import re
 import feedparser
 from bs4 import BeautifulSoup
 from bs4.element import Tag, NavigableString
-from datetime import date, time
+from datetime import date, time, datetime
 
 # Location of schedule ATOM feed
 feed_url = "http://ministryschedule.actsii.org/feeds/posts/default"
@@ -157,5 +157,25 @@ def dump_schedule(schedule):
             for a in sorted(schedule[d][t].keys()):
                 print('\t\t%s: %s' % (a, repr(s[d][t][a])))
 
+def extract_assignments(schedule, person):
+    """ Returns a list of all the assignments for the given person. """
+    assignments = []
+    for edate in schedule.keys():
+        for etime in schedule[edate].keys():
+            for assignment in schedule[edate][etime].keys():
+                alist = schedule[edate][etime][assignment]
+                alist = [([a] if isinstance(a,str) else a) for a in alist] # normalize
+                alist = [item for sublist in alist for item in sublist]    # flatten
+                for assignee in alist:
+                    if assignee.strip().lower() == person.strip().lower():
+                        ts = datetime(edate.year, edate.month, edate.day, etime.hour, etime.minute)
+                        assignments.append((ts,assignment))
+    return sorted(assignments, key=lambda y: y[0])
+
+def dump_assignments(assignments):
+    for n in assignments:
+        print (n[0].strftime('%A, %B %d, %I:%M %p') + ' ' + n[1])
+
 s = get_schedule(feed_url)
-dump_schedule(s)
+a = extract_assignments(s, 'philip h')
+dump_assignments([n for n in a if n[0] >= datetime.now()])
