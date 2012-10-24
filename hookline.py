@@ -3,7 +3,11 @@ import feedparser
 from bs4 import BeautifulSoup
 from bs4.element import Tag, NavigableString
 
+# Location of schedule ATOM feed
+feed_url = "http://ministryschedule.actsii.org/feeds/posts/default"
+
 def clean(string):
+    """ Removes known unwanted characters from strings in the feed. """
     return string.replace('\xa0','')
 
 def fix_headers(soup):
@@ -51,16 +55,25 @@ def get_lines(soup):
                 lines[-1] += clean(child.string)
     return [line.strip() for line in lines]
 
-feed_url = "http://ministryschedule.actsii.org/feeds/posts/default"
-feed = feedparser.parse(feed_url)
+def parse_schedule(lines):
+    """ Parses a feed from read_feed and returns a dictionary of assignments by date. """
+    pass
 
-lines = []
-for item in feed['items']:
-    for contentPart in item['content']:
-        soup = BeautifulSoup(contentPart['value'])
-        fix_headers(soup)
-        fix_sameline(soup, ['Bass','Churchview','Sound Board'])
-        fix_extras(soup, ['Sound Booth'])
-        for line in get_lines(soup):
-            if len(line.strip()) > 0:
-                lines.append(line)
+def read_feed(url):
+    """ Pulls the feed down and puts it into a list of strings. """
+    feed = feedparser.parse(feed_url)
+    lines = []
+    for item in feed['items']:
+        for contentPart in item['content']:
+            soup = BeautifulSoup(contentPart['value'])
+            fix_headers(soup)
+            fix_sameline(soup, ['Bass','Churchview','Sound Board'])
+            fix_extras(soup, ['Sound Booth'])
+            for line in get_lines(soup):
+                if len(line.strip()) > 0:
+                    lines.append(line)
+    return lines
+
+def get_schedule(url):
+    """ Gets the given schedule and returns a dictionary of assignments by date. """
+    return parse_schedule(read_feed(url))
