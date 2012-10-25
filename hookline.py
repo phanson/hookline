@@ -176,6 +176,3 @@ def dump_assignments(assignments):
     for n in assignments:
         print (n[0].strftime('%A, %B %d, %I:%M %p') + ' ' + n[1])
 
-s = get_schedule(feed_url)
-a = extract_assignments(s, 'philip h')
-dump_assignments([n for n in a if n[0] >= datetime.now()])
