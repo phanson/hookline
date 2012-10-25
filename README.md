@@ -14,8 +14,8 @@ It is not a generalized schedule scraper, nor am I interested in that project. H
 
 HookLine requires the following external Python libraries:
 
-* FeedParser
-* BeautifulSoup
+* [FeedParser](http://code.google.com/p/feedparser/)
+* [BeautifulSoup](http://www.crummy.com/software/BeautifulSoup/)
 
 It's tested running under Python 3.1, and there are no plans to expand testing.
 
