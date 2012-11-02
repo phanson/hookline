@@ -81,10 +81,12 @@ def get_header_date(header):
 
 def get_header_time(header):
     """ Returns the time corresponding to the given header. """
-    s = re.search('(\d+):(\d+)\s*(am|pm)', header, re.IGNORECASE)
+    s = re.search('(\d+)(:\d+)?\s*(am|pm)', header, re.IGNORECASE)
     if s:
         hour = int(s.groups()[0])
-        minute = int(s.groups()[1])
+        minute = 0
+        if s.groups()[1]:
+            minute = int(s.groups()[1][1:])
         if s.groups()[2].lower() == 'pm':
             hour += 12
         return time(hour,minute)
@@ -155,7 +157,7 @@ def dump_schedule(schedule):
         for t in sorted(schedule[d].keys()):
             print('\t' + t.isoformat())
             for a in sorted(schedule[d][t].keys()):
-                print('\t\t%s: %s' % (a, repr(s[d][t][a])))
+                print('\t\t%s: %s' % (a, repr(schedule[d][t][a])))
 
 def extract_assignments(schedule, person):
     """ Returns a list of all the assignments for the given person. """
