@@ -151,13 +151,22 @@ def get_schedule(url):
     """ Gets the given schedule and returns a dictionary of assignments by date. """
     return parse_schedule(read_feed(url))
 
-def dump_schedule(schedule):
+def dump_schedule_assignment(assignment, people, indent_level):
+    print(('\t' * indent_level) + '%s: %s' % (assignment, repr(people)))
+
+def dump_schedule_time(time, schedule_time, indent_level = 0):
+    print(('\t' * indent_level) + time.isoformat())
+    for a in sorted(schedule_time.keys()):
+        dump_schedule_assignment(a, schedule_time[a], indent_level + 1)
+
+def dump_schedule_date(day, schedule_date, indent_level = 0):
+    print(('\t' * indent_level) + day.isoformat())
+    for t in sorted(schedule_date.keys()):
+        dump_schedule_time(t, schedule_date[t], indent_level + 1)
+
+def dump_schedule(schedule, indent_level = 0):
     for d in sorted(schedule.keys()):
-        print(d.isoformat())
-        for t in sorted(schedule[d].keys()):
-            print('\t' + t.isoformat())
-            for a in sorted(schedule[d][t].keys()):
-                print('\t\t%s: %s' % (a, repr(schedule[d][t][a])))
+        dump_schedule_date(d, schedule[d], indent_level + 1)
 
 def extract_assignments(schedule, person):
     """ Returns a list of all the assignments for the given person. """
@@ -174,7 +183,12 @@ def extract_assignments(schedule, person):
                         assignments.append((ts,assignment))
     return sorted(assignments, key=lambda y: y[0])
 
+def dump_assignment(assignment):
+    ts = assignment[0]
+    people = assignment[1]
+    print(ts.strftime('%A, %B %d, %I:%M %p') + ' ' + people)
+
 def dump_assignments(assignments):
     for n in assignments:
-        print (n[0].strftime('%A, %B %d, %I:%M %p') + ' ' + n[1])
+        dump_assignment(n)
 
