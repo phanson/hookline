@@ -155,12 +155,12 @@ def dump_schedule_assignment(assignment, people, indent_level):
     print(('\t' * indent_level) + '%s: %s' % (assignment, repr(people)))
 
 def dump_schedule_time(time, schedule_time, indent_level = 0):
-    print(('\t' * indent_level) + time.isoformat())
+    print(('\t' * indent_level) + time.strftime('%I:%M %p').lower())
     for a in sorted(schedule_time.keys()):
         dump_schedule_assignment(a, schedule_time[a], indent_level + 1)
 
 def dump_schedule_date(day, schedule_date, indent_level = 0):
-    print(('\t' * indent_level) + day.isoformat())
+    print(('\t' * indent_level) + day.strftime('%A, %B %m, %Y'))
     for t in sorted(schedule_date.keys()):
         dump_schedule_time(t, schedule_date[t], indent_level + 1)
 
@@ -168,16 +168,17 @@ def dump_schedule(schedule, indent_level = 0):
     for d in sorted(schedule.keys()):
         dump_schedule_date(d, schedule[d], indent_level + 1)
 
+def flatten_list(scruffy_list):
+    norm = [([a] if isinstance(a,str) else a) for a in scruffy_list] # normalize
+    return [item for sublist in norm for item in sublist] # flatten
+
 def extract_assignments(schedule, person):
     """ Returns a list of all the assignments for the given person. """
     assignments = []
     for edate in schedule.keys():
         for etime in schedule[edate].keys():
             for assignment in schedule[edate][etime].keys():
-                alist = schedule[edate][etime][assignment]
-                alist = [([a] if isinstance(a,str) else a) for a in alist] # normalize
-                alist = [item for sublist in alist for item in sublist]    # flatten
-                for assignee in alist:
+                for assignee in flatten_list(schedule[edate][etime][assignment]):
                     if assignee.strip().lower() == person.strip().lower():
                         ts = datetime(edate.year, edate.month, edate.day, etime.hour, etime.minute)
                         assignments.append((ts,assignment))
