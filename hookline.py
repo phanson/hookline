@@ -187,7 +187,8 @@ def extract_assignments(schedule, person):
 def dump_assignment(assignment):
     ts = assignment[0]
     people = assignment[1]
-    print(ts.strftime('%A, %B %d, %I:%M %p') + ' ' + people)
+    print('%s, %s: %s' % (ts.date().strftime('%A, %B %d'),
+                         ts.time().strftime('%I:%M %p').lower(), people))
 
 def dump_assignments(assignments):
     for n in assignments:
