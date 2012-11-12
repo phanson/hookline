@@ -17,7 +17,7 @@ HookLine requires the following external Python libraries:
 * [FeedParser](http://code.google.com/p/feedparser/)
 * [BeautifulSoup](http://www.crummy.com/software/BeautifulSoup/)
 
-It's tested running under Python 3.1, and there are no plans to expand testing.
+It's tested running under Python 3.3, and there are no plans to expand testing.
 
 ## Name
 
