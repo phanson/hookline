@@ -8,8 +8,8 @@ def next_schedule_date(datefloor, schedule):
 		raise Exception('No schedule dates after %s' % datefloor.isoformat())
 	return next_date
 
-def print_schedule_time_r(time, schedule_time):
-	print('\t' + time.strftime('%I:%M %p').lower())
+def print_schedule_time_r(t, schedule_time):
+	print('\t' + t.strftime('%%d:%M %p').lower() % (t.hour % 12))
 	rev_a = {}
 	for assignment in schedule_time.keys():
 		for person in hookline.flatten_list(schedule_time[assignment]):
@@ -20,7 +20,7 @@ def print_schedule_time_r(time, schedule_time):
 		print('\t\t%s: %s' % (person, ', '.join(rev_a[person])))
 
 def print_schedule_date_r(day, schedule_date):
-	print(day.strftime('%A, %B %m, %Y'))
+	print(day.strftime('%A, %B %%d, %Y') % day.day)
 	for t in sorted(schedule_date.keys()):
 		print_schedule_time_r(t, schedule_date[t])
 

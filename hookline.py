@@ -132,7 +132,7 @@ def flatten(soup, elements):
 
 def read_feed(url):
     """ Pulls the feed down and puts it into a sanitized list of strings. """
-    feed = feedparser.parse(feed_url)
+    feed = feedparser.parse(url)
     lines = []
     for item in feed['items']:
         for contentPart in item['content']:
@@ -154,13 +154,13 @@ def get_schedule(url):
 def dump_schedule_assignment(assignment, people, indent_level):
     print(('\t' * indent_level) + '%s: %s' % (assignment, repr(people)))
 
-def dump_schedule_time(time, schedule_time, indent_level = 0):
-    print(('\t' * indent_level) + time.strftime('%I:%M %p').lower())
+def dump_schedule_time(t, schedule_time, indent_level = 0):
+    print(('\t' * indent_level) + t.strftime('%%d:%M %p').lower() % (t.hour % 12))
     for a in sorted(schedule_time.keys()):
         dump_schedule_assignment(a, schedule_time[a], indent_level + 1)
 
 def dump_schedule_date(day, schedule_date, indent_level = 0):
-    print(('\t' * indent_level) + day.strftime('%A, %B %m, %Y'))
+    print(('\t' * indent_level) + day.strftime('%A, %B %%d, %Y') % day.day)
     for t in sorted(schedule_date.keys()):
         dump_schedule_time(t, schedule_date[t], indent_level + 1)
 
