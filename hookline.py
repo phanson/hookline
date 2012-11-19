@@ -151,8 +151,15 @@ def get_schedule(url):
     """ Gets the given schedule and returns a dictionary of assignments by date. """
     return parse_schedule(read_feed(url))
 
+def format_people(people):
+    if len(people) == 0:
+        return '';
+    if isinstance(people[0], list):
+        return '; '.join(', '.join(sublist) for sublist in people)
+    return ', '.join(people)
+
 def dump_schedule_assignment(assignment, people, indent_level):
-    print(('\t' * indent_level) + '%s: %s' % (assignment, repr(people)))
+    print(('\t' * indent_level) + '%s: %s' % (assignment, format_people(people)))
 
 def dump_schedule_time(t, schedule_time, indent_level = 0):
     print(('\t' * indent_level) + t.strftime('%%d:%M %p').lower() % (t.hour % 12))
