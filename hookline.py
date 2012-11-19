@@ -151,30 +151,6 @@ def get_schedule(url):
     """ Gets the given schedule and returns a dictionary of assignments by date. """
     return parse_schedule(read_feed(url))
 
-def format_people(people):
-    if len(people) == 0:
-        return '';
-    if isinstance(people[0], list):
-        return '; '.join(', '.join(sublist) for sublist in people)
-    return ', '.join(people)
-
-def dump_schedule_assignment(assignment, people, indent_level):
-    print(('\t' * indent_level) + '%s: %s' % (assignment, format_people(people)))
-
-def dump_schedule_time(t, schedule_time, indent_level = 0):
-    print(('\t' * indent_level) + t.strftime('%%d:%M %p').lower() % (t.hour % 12))
-    for a in sorted(schedule_time.keys()):
-        dump_schedule_assignment(a, schedule_time[a], indent_level + 1)
-
-def dump_schedule_date(day, schedule_date, indent_level = 0):
-    print(('\t' * indent_level) + day.strftime('%A, %B %%d, %Y') % day.day)
-    for t in sorted(schedule_date.keys()):
-        dump_schedule_time(t, schedule_date[t], indent_level + 1)
-
-def dump_schedule(schedule, indent_level = 0):
-    for d in sorted(schedule.keys()):
-        dump_schedule_date(d, schedule[d], indent_level + 1)
-
 def flatten_list(scruffy_list):
     norm = [([a] if isinstance(a,str) else a) for a in scruffy_list] # normalize
     return [item for sublist in norm for item in sublist] # flatten
@@ -190,14 +166,3 @@ def extract_assignments(schedule, person):
                         ts = datetime(edate.year, edate.month, edate.day, etime.hour, etime.minute)
                         assignments.append((ts,assignment))
     return sorted(assignments, key=lambda y: y[0])
-
-def dump_assignment(assignment):
-    ts = assignment[0]
-    people = assignment[1]
-    print('%s, %s: %s' % (ts.date().strftime('%A, %B %d'),
-                         ts.time().strftime('%I:%M %p').lower(), people))
-
-def dump_assignments(assignments):
-    for n in assignments:
-        dump_assignment(n)
-
