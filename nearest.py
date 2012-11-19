@@ -28,10 +28,10 @@ day = next_schedule_date(date.today(), schedule)
 schedule_day = schedule[day]
 
 if args.assignments:
-	schedule_day = filter_schedule.by_assignment(args.assignments, args.invert_filters, schedule_day)
+	schedule_day = filter_schedule.day_by_assignment(args.assignments, args.invert_filters, schedule_day)
 if args.names:
-	schedule_day = filter_schedule.by_name(args.names, args.invert_filters, schedule_day)
-schedule_day = filter_schedule.clean(schedule_day)
+	schedule_day = filter_schedule.day_by_name(args.names, args.invert_filters, schedule_day)
+schedule_day = filter_schedule.clean_day(schedule_day)
 
 if args.reverse:
 	output.day_reverse(day, schedule_day)
