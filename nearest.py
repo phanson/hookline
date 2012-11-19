@@ -3,7 +3,7 @@ import argparse
 from datetime import date
 
 def next_schedule_date(datefloor, schedule):
-	next_date = next(filter(lambda x: x > datefloor, sorted(schedule)), None)
+	next_date = next(filter(lambda x: x >= datefloor, sorted(schedule)), None)
 	if next_date is None:
 		raise Exception('No schedule dates after %s' % datefloor.isoformat())
 	return next_date
