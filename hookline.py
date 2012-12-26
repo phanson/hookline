@@ -47,6 +47,9 @@ def fix_extras(soup, extras):
 def fix_orphans(soup):
     """ Removes break tags that separate orphaned lines from their parents """
     for br in soup.findAll('br'):
+        if br.nextSibling is None:
+            br.extract()
+            continue
         s = br.nextSibling.string
         if s and len(s) > 0 and not (re.search('\d+', s) or re.search(':', s)):
             br.extract()
