@@ -73,7 +73,7 @@ def is_header(line):
 def get_header_date(header):
     """ Returns the date contained in the given header. """
     months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-    s = re.search('(%s)\s*(\d+)' % '|'.join(months), header, re.IGNORECASE)
+    s = re.search('(%s)\w*\s*(\d+)' % '|'.join(months), header, re.IGNORECASE)
     if not s:
         raise Exception('Could not find header month: %s' % header)
     current_year = date.today().year
