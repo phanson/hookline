@@ -1,4 +1,5 @@
 *.py[cod]
-Scripts/
-Lib/
-Include/
+[Ss]cripts/
+[Ll]ib/
+[Ii]nclude/
+[Bb]in/
